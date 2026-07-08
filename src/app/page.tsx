@@ -27,21 +27,27 @@ export default function HomePage() {
       icon: <BookOpen size={22} weight="duotone" />,
       label: '已练习',
       value: `${progress.practiceCount} 次`,
+      clickable: false,
     },
     {
       icon: <Fire size={22} weight="duotone" />,
       label: '连续打卡',
       value: `${progress.dailyStreak} 天`,
+      clickable: false,
     },
     {
       icon: <Trophy size={22} weight="duotone" />,
       label: '已掌握',
       value: `${progress.masteredIds.length} 词`,
+      clickable: true,
+      href: '/words?type=mastered',
     },
     {
       icon: <Target size={22} weight="duotone" />,
       label: '待加强',
       value: `${progress.weakIds.length} 词`,
+      clickable: true,
+      href: '/words?type=weak',
     },
   ];
 
@@ -74,11 +80,19 @@ export default function HomePage() {
           {stats.map((stat, i) => (
             <div
               key={stat.label}
-              className="bg-[#FFFFFF] rounded-2xl p-4 border border-[#E5E7EB] text-center"
+              onClick={() => stat.clickable && stat.href && router.push(stat.href)}
+              className={`bg-[#FFFFFF] rounded-2xl p-4 border border-[#E5E7EB] text-center ${
+                stat.clickable
+                  ? 'cursor-pointer hover:border-[#4F8C6C] hover:shadow-sm transition-all'
+                  : ''
+              }`}
             >
               <div className="text-[#4F8C6C] mb-2 flex justify-center">{stat.icon}</div>
               <div className="text-2xl font-bold text-[#1A1A2E]">{stat.value}</div>
-              <div className="text-xs text-[#6B7280] mt-1">{stat.label}</div>
+              <div className="text-xs text-[#6B7280] mt-1">
+                {stat.label}
+                {stat.clickable && <span className="ml-1 opacity-40">→</span>}
+              </div>
             </div>
           ))}
         </motion.div>
