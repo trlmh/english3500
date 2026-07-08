@@ -8,7 +8,7 @@ import Progress from '@/components/ui/Progress';
 import Button from '@/components/ui/Button';
 import { PracticeMode } from '@/types';
 import { getLocalProgress } from '@/lib/utils';
-import { BookOpen, Fire, Target, Trophy } from '@phosphor-icons/react';
+import { BookOpen, Fire, Target, Trophy, ListBullets } from '@phosphor-icons/react';
 
 export default function HomePage() {
   const router = useRouter();
@@ -110,6 +110,24 @@ export default function HomePage() {
             label="掌握进度"
             showPercentage
           />
+        </motion.div>
+
+        {/* 词表入口 */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.4 }}
+          className="mb-8"
+        >
+          <Button
+            onClick={() => router.push('/words')}
+            variant="secondary"
+            size="lg"
+            className="w-full py-4 text-lg rounded-2xl"
+          >
+            <ListBullets size={24} weight="duotone" />
+            查看完整词表
+          </Button>
         </motion.div>
 
         {/* 练习模式选择 */}
