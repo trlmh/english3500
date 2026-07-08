@@ -1,5 +1,6 @@
 // 纯内存数据存储 - 无数据库依赖，适合 Vercel Serverless
 import wordsData from './words.json';
+import sentencesData from './sentences.json';
 
 export interface Word {
   id: number;
@@ -9,6 +10,17 @@ export interface Word {
   part_of_speech: string;
   unit: string;
   difficulty: number;
+}
+
+export interface Sentence {
+  word_id: number;
+  word: string;
+  translation: string;
+  phonetic: string;
+  part_of_speech: string;
+  full_sentence: string;
+  blank_sentence: string;
+  hint_type: 'first_letter' | 'translation' | 'phonetic';
 }
 
 export interface PracticeRecord {
@@ -35,6 +47,13 @@ const words: Word[] = (wordsData as any[]).map((w) => ({
 // 内存中的练习记录（Serverless 重启会丢失，用户进度主要靠前端 localStorage）
 const practiceRecords: PracticeRecord[] = [];
 let recordIdCounter = 1;
+
+// 句子数据
+const sentences: Sentence[] = sentencesData as Sentence[];
+const sentencesByWordId = new Map<number, Sentence>();
+for (const s of sentences) {
+  sentencesByWordId.set(s.word_id, s);
+}
 
 // 索引
 const wordById = new Map<number, Word>();
@@ -167,5 +186,19 @@ export const dataStore = {
       }
     }
     return [...dayMap.entries()].map(([date, s]) => ({ date, ...s })).sort((a, b) => b.date.localeCompare(a.date));
+  },
+
+  getSentenceByWordId(wordId: number): Sentence | undefined {
+    return sentencesByWordId.get(wordId);
+  },
+
+  getRandomSentences(count: number = 10, excludeWordIds?: number[]): Sentence[] {
+    const excludeSet = new Set(excludeWordIds || []);
+    const pool = sentences.filter(s => !excludeSet.has(s.word_id));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, count);
   },
 };

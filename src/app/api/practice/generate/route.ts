@@ -15,6 +15,10 @@ export async function GET(request: NextRequest) {
         const distractors = dataStore.getRandomWords(3, [word.id, ...(exclude || [])]);
         q.options = [word, ...distractors].sort(() => Math.random() - 0.5);
       }
+      if (mode === 'context') {
+        const sentence = dataStore.getSentenceByWordId(word.id);
+        q.sentence = sentence || null;
+      }
       return q;
     });
 

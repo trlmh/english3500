@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { PracticeMode, PracticeModeInfo } from '@/types';
-import { BookOpen, PencilLine, Keyboard, ListChecks, Headphones } from '@phosphor-icons/react';
+import { BookOpen, PencilLine, Keyboard, ListChecks, Headphones, TextAlignLeft } from '@phosphor-icons/react';
 
 const modes: PracticeModeInfo[] = [
   { id: 'en2cn', name: '英译中', description: '看到英文单词，选择或输入中文释义', icon: 'BookOpen' },
@@ -10,6 +10,7 @@ const modes: PracticeModeInfo[] = [
   { id: 'spelling', name: '拼写练习', description: '听发音看释义，正确拼写单词', icon: 'Keyboard' },
   { id: 'choice', name: '选择题', description: '四选一，选出正确的中文或英文', icon: 'ListChecks' },
   { id: 'dictation', name: '听写模式', description: '听单词发音，写出对应英文', icon: 'Headphones' },
+  { id: 'context', name: '语境填空', description: '根据句子语境和提示，填入正确的单词', icon: 'TextAlignLeft' },
 ];
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -18,6 +19,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Keyboard: <Keyboard size={28} weight="duotone" />,
   ListChecks: <ListChecks size={28} weight="duotone" />,
   Headphones: <Headphones size={28} weight="duotone" />,
+  TextAlignLeft: <TextAlignLeft size={28} weight="duotone" />,
 };
 
 interface ModeSelectorProps {

@@ -63,6 +63,7 @@ export function getModeLabel(mode: string): string {
     spelling: '拼写练习',
     choice: '选择题',
     dictation: '听写模式',
+    context: '语境填空',
   };
   return labels[mode] || mode;
 }

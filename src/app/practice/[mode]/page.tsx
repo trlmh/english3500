@@ -249,6 +249,7 @@ export default function PracticePage() {
             isCorrect={currentState?.isCorrect}
             questionNumber={currentIndex + 1}
             totalQuestions={questions.length}
+            sentence={currentQuestion.sentence}
           />
         )}
 

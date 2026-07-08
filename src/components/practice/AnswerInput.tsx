@@ -35,6 +35,7 @@ export default function AnswerInput({ mode, onSubmit, disabled, placeholder }: A
       case 'cn2en': return '输入英文单词...';
       case 'spelling': return '拼写英文单词...';
       case 'dictation': return '输入听到的单词...';
+      case 'context': return '填入缺失的单词...';
       default: return '输入答案...';
     }
   };

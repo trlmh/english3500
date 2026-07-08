@@ -12,9 +12,16 @@ interface WordCardProps {
   isCorrect?: boolean | null;
   questionNumber: number;
   totalQuestions: number;
+  sentence?: {
+    blank_sentence: string;
+    full_sentence: string;
+    hint_type: 'first_letter' | 'translation' | 'phonetic';
+    translation: string;
+    phonetic: string;
+  } | null;
 }
 
-export default function WordCard({ word, mode, showAnswer, isCorrect, questionNumber, totalQuestions }: WordCardProps) {
+export default function WordCard({ word, mode, showAnswer, isCorrect, questionNumber, totalQuestions, sentence }: WordCardProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
@@ -73,6 +80,8 @@ export default function WordCard({ word, mode, showAnswer, isCorrect, questionNu
         return { text: word.word, sub: word.phonetic, hint: word.part_of_speech };
       case 'dictation':
         return { text: '', sub: '', hint: word.part_of_speech };
+      case 'context':
+        return { text: sentence?.blank_sentence || '', sub: '', hint: '' };
       default:
         return { text: word.word, sub: '', hint: '' };
     }
@@ -115,6 +124,43 @@ export default function WordCard({ word, mode, showAnswer, isCorrect, questionNu
             </button>
             <p className="text-sm text-[#6B7280] mt-4">
               {isSpeaking ? '正在朗读...' : '点击播放 / 听发音写出单词'}
+            </p>
+          </div>
+        ) : mode === 'context' && sentence ? (
+          <div className="mb-6">
+            {/* 提示标签 */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              {sentence.hint_type === 'first_letter' && (
+                <span className="inline-block px-3 py-1 rounded-full bg-[#4F8C6C]/10 text-xs text-[#4F8C6C] font-medium">
+                  首字母：{word.word[0]}...
+                </span>
+              )}
+              {sentence.hint_type === 'translation' && (
+                <span className="inline-block px-3 py-1 rounded-full bg-[#4F8C6C]/10 text-xs text-[#4F8C6C] font-medium">
+                  释义：{sentence.translation}
+                </span>
+              )}
+              {sentence.hint_type === 'phonetic' && (
+                <span className="inline-block px-3 py-1 rounded-full bg-[#4F8C6C]/10 text-xs text-[#4F8C6C] font-medium">
+                  音标：{sentence.phonetic}
+                </span>
+              )}
+              <span className="inline-block px-3 py-1 rounded-full bg-gray-100 text-xs text-[#6B7280]">
+                {word.part_of_speech}
+              </span>
+            </div>
+            {/* 句子 */}
+            <p className="text-lg md:text-xl leading-relaxed text-[#1A1A2E] text-left">
+              {sentence.blank_sentence.split('___').map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && (
+                    <span className="inline-block mx-1 px-4 py-0.5 border-b-2 border-[#4F8C6C] text-[#4F8C6C] font-bold min-w-[80px] text-center">
+                      {showAnswer ? word.word : '?'}
+                    </span>
+                  )}
+                </span>
+              ))}
             </p>
           </div>
         ) : (

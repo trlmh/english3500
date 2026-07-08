@@ -8,7 +8,7 @@ export interface Word {
   difficulty: number;
 }
 
-export type PracticeMode = 'en2cn' | 'cn2en' | 'spelling' | 'choice' | 'dictation';
+export type PracticeMode = 'en2cn' | 'cn2en' | 'spelling' | 'choice' | 'dictation' | 'context';
 
 export interface PracticeModeInfo {
   id: PracticeMode;
@@ -20,6 +20,15 @@ export interface PracticeModeInfo {
 export interface PracticeQuestion {
   word: Word;
   options?: Word[];
+  sentence?: {
+    word_id: number;
+    word: string;
+    translation: string;
+    phonetic: string;
+    full_sentence: string;
+    blank_sentence: string;
+    hint_type: 'first_letter' | 'translation' | 'phonetic';
+  } | null;
 }
 
 export interface PracticeResult {
