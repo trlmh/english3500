@@ -89,9 +89,13 @@ export const dataStore = {
     return { words: pageWords, total, page, limit, totalPages: Math.ceil(total / limit) };
   },
 
-  getRandomWords(count: number = 10, excludeIds?: number[]): Word[] {
+  getRandomWords(count: number = 10, excludeIds?: number[], includeIds?: number[]): Word[] {
     const excludeSet = new Set(excludeIds || []);
-    const pool = words.filter(w => !excludeSet.has(w.id));
+    let pool = words.filter(w => !excludeSet.has(w.id));
+    if (includeIds && includeIds.length > 0) {
+      const includeSet = new Set(includeIds);
+      pool = pool.filter(w => includeSet.has(w.id));
+    }
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];

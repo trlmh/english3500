@@ -38,11 +38,12 @@ export const api = {
 
   getUnits: () => request<any>('/words/units'),
 
-  generateQuestions: (mode: string, count?: number, exclude?: number[]) => {
+  generateQuestions: (mode: string, count?: number, exclude?: number[], wordIds?: number[]) => {
     const params = new URLSearchParams();
     params.set('mode', mode);
     if (count) params.set('count', String(count));
     if (exclude?.length) params.set('exclude', exclude.join(','));
+    if (wordIds?.length) params.set('wordIds', wordIds.join(','));
     return request<any>(`/practice/generate?${params}`);
   },
 

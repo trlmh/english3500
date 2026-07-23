@@ -7,7 +7,8 @@ export async function GET(request: NextRequest) {
     const mode = searchParams.get('mode') || 'en2cn';
     const count = parseInt(searchParams.get('count') || '10');
     const exclude = searchParams.get('exclude')?.split(',').map(Number).filter(Boolean);
-    const words = dataStore.getRandomWords(Math.min(count, 30), exclude);
+    const wordIds = searchParams.get('wordIds')?.split(',').map(Number).filter(Boolean);
+    const words = dataStore.getRandomWords(Math.min(count, 30), exclude, wordIds);
 
     const questions = words.map(word => {
       const q: any = { word };

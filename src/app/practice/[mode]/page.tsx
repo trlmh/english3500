@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import WordCard from '@/components/practice/WordCard';
 import AnswerInput from '@/components/practice/AnswerInput';
@@ -24,7 +24,11 @@ interface QuestionState {
 export default function PracticePage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const mode = params.mode as PracticeMode;
+  const wordIdsParam = searchParams.get('wordIds');
+  const rangeLabel = searchParams.get('rangeLabel') || '';
+  const wordIds = wordIdsParam ? wordIdsParam.split(',').map(Number).filter(Boolean) : undefined;
 
   const [questions, setQuestions] = useState<PracticeQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,7 +47,7 @@ export default function PracticePage() {
     try {
       const progress = getLocalProgress();
       const excludeIds = [...progress.masteredIds.slice(-100), ...progress.weakIds.slice(-50)];
-      const { questions: qs } = await api.generateQuestions(mode, QUESTIONS_PER_ROUND, excludeIds);
+      const { questions: qs } = await api.generateQuestions(mode, QUESTIONS_PER_ROUND, excludeIds, wordIds);
       setQuestions(qs);
       setCurrentIndex(0);
       setQuestionStates({});
@@ -55,11 +59,11 @@ export default function PracticePage() {
     } finally {
       setLoading(false);
     }
-  }, [mode]);
+  }, [mode, wordIds]);
 
   useEffect(() => {
     loadQuestions();
-  }, [loadQuestions]);
+  }, [mode, wordIds]);
 
   const currentQuestion = questions[currentIndex];
   const currentState = questionStates[currentIndex];
@@ -238,8 +242,11 @@ export default function PracticePage() {
           value={currentIndex + 1}
           max={questions.length}
           size="sm"
-          className="mb-8"
+          className="mb-2"
         />
+        {rangeLabel && (
+          <p className="text-xs text-[#6B7280] mb-6 text-center">📋 {rangeLabel}</p>
+        )}
 
         {currentQuestion && (
           <WordCard
